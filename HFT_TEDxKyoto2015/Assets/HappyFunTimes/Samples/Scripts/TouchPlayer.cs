@@ -53,7 +53,10 @@ class TouchPlayer : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        // Because of physics layers we can only collide with the goal
+        
+
+
+
     }
 
     private void Remove(object sender, EventArgs e)
