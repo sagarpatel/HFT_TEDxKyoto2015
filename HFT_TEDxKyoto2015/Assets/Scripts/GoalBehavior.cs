@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using HappyFunTimes;
 using CSSParse;
+using System.Linq;
 
 namespace HappyFunTimesExample 
 {
@@ -15,9 +16,14 @@ namespace HappyFunTimesExample
 		public System.Random m_rand;
 		public Vector3 m_position;
 
-		float m_fleeImpulseCooldown = 3.0f;
-		float m_fleeImpulseScale = 1000.0f;
+		float m_fleeImpulseCooldown = 1.42f;
+		float m_fleeImpulseScale = 5000.0f;
 		Rigidbody m_goalRigibody;
+		float m_fleeTimeCounter = 0;
+		public AnimationCurve m_scaleCurve;
+
+		Vector3 m_originalScale;
+		Vector3 m_minScale = new Vector3(10,10,10);
 
 		void Start() 
 		{
@@ -25,6 +31,7 @@ namespace HappyFunTimesExample
 			m_position = new Vector3();
 			m_goalRigibody = GetComponent<Rigidbody>();
 			StartCoroutine(ImpulseAwayFromPlayersCoroutine());
+			m_originalScale = transform.localScale;
 		}
 		
 		void OnTriggerEnter(Collider other) 
@@ -45,15 +52,25 @@ namespace HappyFunTimesExample
 			m_goalRigibody.velocity = Vector3.zero;
 		}
 
+		void Update()
+		{
+			m_fleeTimeCounter += Time.deltaTime;
+			float progress = m_fleeTimeCounter / m_fleeImpulseCooldown;
+			float step = m_scaleCurve.Evaluate(progress);
+
+			transform.localScale = Vector3.Lerp(m_minScale, m_originalScale, step);
+
+		}
 
 		IEnumerator ImpulseAwayFromPlayersCoroutine()
 		{
 			while(true)
 			{
-				Vector3 playersPos = GetAveragePlayersPosition();
-				Vector3 awayVec = -(playersPos - transform.position).normalized;
+				Vector3 fleePos = GetClosestPlayerPosition(); //GetAveragePlayersPosition();
+				Vector3 awayVec = -(fleePos - transform.position).normalized;
 				m_goalRigibody.AddForce(awayVec * m_fleeImpulseScale);
 
+				m_fleeTimeCounter = 0;
 				yield return new WaitForSeconds(m_fleeImpulseCooldown);
 			}
 
@@ -70,6 +87,13 @@ namespace HappyFunTimesExample
 			}
 			Vector3 averagePos = posSummer / (float)players.Length;
 			return averagePos;
+		}
+
+		Vector3 GetClosestPlayerPosition()
+		{
+			GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+			players = players.OrderBy(player => Vector3.Distance(player.transform.position, transform.position)).ToArray();
+			return players[0].transform.position;
 		}
 		
 	}
