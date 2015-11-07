@@ -19,7 +19,9 @@ public class TouchPlayer_Custom : MonoBehaviour
 	private string m_name;
 
 		int m_playerScore = 0;
-
+		Rigidbody m_playerRigidbody;
+		float m_forceScale = 10000.0f;
+		Vector3 m_previousForceVector = Vector3.zero;
 
 	void Start()
 	{
@@ -35,18 +37,40 @@ public class TouchPlayer_Custom : MonoBehaviour
 		
 		SetName(m_gamepad.Name);
 		SetColor(m_gamepad.Color);
+
+		m_playerRigidbody = GetComponent<Rigidbody>();
 	}
 	
 	void Update()
 	{
 		TouchGameSettings settings = TouchGameSettings.settings();
-		float l = 1.0f; //Time.deltaTime * 5.0f;
-		float nx = m_gamepad.axes[HFTGamepad.AXIS_TOUCH_X] * 0.5f;        // -0.5 <-> 0.5
-		float ny = m_gamepad.axes[HFTGamepad.AXIS_TOUCH_Y] * 0.5f + 0.5f; //    0 <-> 1
-		m_position.x = Mathf.Lerp(m_position.x, settings.areaWidth * nx, l);
-		m_position.z = Mathf.Lerp(m_position.z, settings.areaHeight - (ny * settings.areaHeight) - 1, l);  // because in 2D down is positive.
+		//float l = 1.0f; //Time.deltaTime * 5.0f;
+		//float nx = m_gamepad.axes[HFTGamepad.AXIS_TOUCH_X] * 0.5f;        // -0.5 <-> 0.5
+		//float ny = m_gamepad.axes[HFTGamepad.AXIS_TOUCH_Y] * 0.5f + 0.5f; //    0 <-> 1
+		//m_position.x = Mathf.Lerp(m_position.x, settings.areaWidth * nx, l);
+		//m_position.z = Mathf.Lerp(m_position.z, settings.areaHeight - (ny * settings.areaHeight) - 1, l);  // because in 2D down is positive.
 		
-		gameObject.transform.localPosition = m_position;
+		//gameObject.transform.localPosition = m_position;
+
+		//float nx = m_gamepad.axes[HFTGamepad.AXIS_TOUCH_X] * 0.5f;        // -0.5 <-> 0.5
+		//float ny = m_gamepad.axes[HFTGamepad.AXIS_TOUCH_Y] * 0.5f; //    
+		
+			float nx = m_gamepad.axes[HFTGamepad.AXIS_TOUCH0_X];
+			float ny = -m_gamepad.axes[HFTGamepad.AXIS_TOUCH0_Y];
+
+		Vector3 forceVector = new Vector3( nx, 0, ny );
+
+		if(Vector3.Distance(m_previousForceVector, forceVector) > 0.2f)
+		{
+			
+			Debug.Log(forceVector);
+			m_playerRigidbody.AddForce( forceVector * m_forceScale * Time.deltaTime);
+
+		}
+
+
+			m_previousForceVector = forceVector;
+
 	}
 	
 	void SetName(string name)
@@ -71,8 +95,11 @@ public class TouchPlayer_Custom : MonoBehaviour
 	
 	public void OnTriggerEnter(Collider other)
 	{
-			m_playerScore += 1;
-			RefreshPlayerNameTag();
+			if(other.CompareTag("Goal"))
+			{
+				m_playerScore += 1;
+				RefreshPlayerNameTag();
+			}
 	}
 	
 	private void Remove(object sender, EventArgs e)
