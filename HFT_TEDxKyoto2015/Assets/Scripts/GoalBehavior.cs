@@ -25,6 +25,9 @@ namespace HappyFunTimesExample
 		Vector3 m_originalScale;
 		Vector3 m_minScale = new Vector3(10,10,10);
 
+		float m_explosionRadius = 100.0f;
+		float m_explosionPower  = 1000.0f;
+
 		void Start() 
 		{
 			m_rand = new System.Random();
@@ -38,7 +41,24 @@ namespace HappyFunTimesExample
 		{
 			if(other.CompareTag("Player"))
 			{
+
+
 				PickPosition();
+			}
+
+		}
+
+		void ApplyExplosionForce()
+		{
+			Vector3 explosionPos = transform.position;
+			Collider[] collidersInExplosionRange = Physics.OverlapSphere(explosionPos, m_explosionRadius);
+			for(int i = 0; i < collidersInExplosionRange.Length; i++)
+			{
+				if(collidersInExplosionRange[i].CompareTag("Player"))
+				{
+					Rigidbody targetRigidbody = collidersInExplosionRange[i].GetComponent<Rigidbody>();
+					targetRigidbody.AddExplosionForce(m_explosionPower,explosionPos, m_explosionRadius);
+				}
 			}
 
 		}
