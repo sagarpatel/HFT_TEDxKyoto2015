@@ -25,15 +25,15 @@ namespace HappyFunTimesExample
 		Vector3 m_originalScale;
 		Vector3 m_minScale = new Vector3(10,10,10);
 
-		float m_explosionRadius = 100.0f;
-		float m_explosionPower  = 1000.0f;
+		float m_explosionRadius = 150.0f;
+		float m_explosionPower  = 7000.0f;
 
 		void Start() 
 		{
 			m_rand = new System.Random();
 			m_position = new Vector3();
 			m_goalRigibody = GetComponent<Rigidbody>();
-			StartCoroutine(ImpulseAwayFromPlayersCoroutine());
+			//StartCoroutine(ImpulseAwayFromPlayersCoroutine());
 			m_originalScale = transform.localScale;
 		}
 		
@@ -42,7 +42,7 @@ namespace HappyFunTimesExample
 			if(other.CompareTag("Player"))
 			{
 
-
+				ApplyExplosionForce();
 				PickPosition();
 			}
 
@@ -52,14 +52,23 @@ namespace HappyFunTimesExample
 		{
 			Vector3 explosionPos = transform.position;
 			Collider[] collidersInExplosionRange = Physics.OverlapSphere(explosionPos, m_explosionRadius);
+			int counter = 0;
+
 			for(int i = 0; i < collidersInExplosionRange.Length; i++)
 			{
+				Debug.Log( collidersInExplosionRange[i] );
+
 				if(collidersInExplosionRange[i].CompareTag("Player"))
 				{
+					counter += 1;
 					Rigidbody targetRigidbody = collidersInExplosionRange[i].GetComponent<Rigidbody>();
 					targetRigidbody.AddExplosionForce(m_explosionPower,explosionPos, m_explosionRadius);
+					//Debug.Log( collidersInExplosionRange[i] );
+
 				}
 			}
+
+			Debug.Log(counter);
 
 		}
 		
