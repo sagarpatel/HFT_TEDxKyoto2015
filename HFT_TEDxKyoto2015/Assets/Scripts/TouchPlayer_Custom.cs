@@ -24,6 +24,7 @@ public class TouchPlayer_Custom : MonoBehaviour
 		Vector3 m_previousForceVector = Vector3.zero;
 		public Transform m_impulseParticleEffectHolder;
 		ParticleSystem m_impulseParticles;
+		Light m_playerLight;
 
 	void Start()
 	{
@@ -43,6 +44,8 @@ public class TouchPlayer_Custom : MonoBehaviour
 		m_playerRigidbody = GetComponent<Rigidbody>();
 		m_impulseParticles = m_impulseParticleEffectHolder.GetComponent<ParticleSystem>();
 		m_impulseParticles.startColor = m_gamepad.Color;
+		m_playerLight = GetComponentInChildren<Light>();
+		m_playerLight.color = m_gamepad.Color;
 	}
 	
 	void Update()
