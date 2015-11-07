@@ -20,8 +20,10 @@ public class TouchPlayer_Custom : MonoBehaviour
 
 		int m_playerScore = 0;
 		Rigidbody m_playerRigidbody;
-		float m_forceScale = 10000.0f;
+		float m_forceScale = 20000.0f;
 		Vector3 m_previousForceVector = Vector3.zero;
+		public Transform m_impulseParticleEffectHolder;
+		ParticleSystem m_impulseParticles;
 
 	void Start()
 	{
@@ -39,6 +41,8 @@ public class TouchPlayer_Custom : MonoBehaviour
 		SetColor(m_gamepad.Color);
 
 		m_playerRigidbody = GetComponent<Rigidbody>();
+		m_impulseParticles = m_impulseParticleEffectHolder.GetComponent<ParticleSystem>();
+		m_impulseParticles.startColor = m_gamepad.Color;
 	}
 	
 	void Update()
@@ -66,10 +70,17 @@ public class TouchPlayer_Custom : MonoBehaviour
 			Debug.Log(forceVector);
 			m_playerRigidbody.AddForce( forceVector * m_forceScale * Time.deltaTime);
 
+			
+			Vector3 normalizedDirection = forceVector.normalized;
+			m_impulseParticleEffectHolder.rotation = Quaternion.LookRotation( - normalizedDirection );
+			m_impulseParticles.Play();
+
 		}
 
 
 			m_previousForceVector = forceVector;
+
+
 
 	}
 	
@@ -85,6 +96,10 @@ public class TouchPlayer_Custom : MonoBehaviour
 		m_color = color;
 		m_renderer.material.color = m_color;
 		m_rawImage.material.color = m_color;
+			Color invertedColor = Color.white - m_color;
+			invertedColor.a = 1.0f;
+			m_text.color = invertedColor;
+			
 	}
 
 	void RefreshPlayerNameTag()
