@@ -21,7 +21,7 @@ public class TouchPlayer_Custom : MonoBehaviour
 		int m_playerScore = 0;
 		Rigidbody m_playerRigidbody;
 		float m_forceScale = 20000.0f;
-		Vector3 m_previousForceVector = Vector3.zero;
+		Vector3 m_previousTouchPos = Vector3.zero;
 		public Transform m_impulseParticleEffectHolder;
 		ParticleSystem m_impulseParticles;
 		Light m_playerLight;
@@ -65,23 +65,23 @@ public class TouchPlayer_Custom : MonoBehaviour
 			float nx = m_gamepad.axes[HFTGamepad.AXIS_TOUCH0_X];
 			float ny = -m_gamepad.axes[HFTGamepad.AXIS_TOUCH0_Y];
 
-		Vector3 forceVector = new Vector3( nx, 0, ny );
+		Vector3 touchPos = new Vector3( nx, 0, ny );
 
-		if(Vector3.Distance(m_previousForceVector, forceVector) > 0.2f)
+		if(Vector3.Distance(m_previousTouchPos, touchPos) > 0.4f)
 		{
 			
-			Debug.Log(forceVector);
-			m_playerRigidbody.AddForce( forceVector * m_forceScale * Time.deltaTime);
+				Vector3 normalizedDirection = (touchPos - m_previousTouchPos).normalized;
+				m_playerRigidbody.AddForce( -normalizedDirection * m_forceScale * Time.deltaTime);
 
 			
-			Vector3 normalizedDirection = forceVector.normalized;
-			m_impulseParticleEffectHolder.rotation = Quaternion.LookRotation( - normalizedDirection );
+			
+			m_impulseParticleEffectHolder.rotation = Quaternion.LookRotation( normalizedDirection );
 			m_impulseParticles.Play();
 
 		}
 
 
-			m_previousForceVector = forceVector;
+			m_previousTouchPos = touchPos;
 
 
 
