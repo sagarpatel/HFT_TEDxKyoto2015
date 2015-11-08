@@ -15,7 +15,15 @@ public class GameManager : MonoBehaviour
 	public Text playerText_3;
 	public RawImage playerColor_3;
 
+	public GameObject m_floorObject;
+	Material m_floorMaterial;
 
+	float m_pulsePeriod = 3.0f;
+
+	void Start()
+	{
+		m_floorMaterial = m_floorObject.GetComponent<MeshRenderer>().material;
+	}
 
 	public void RefreshTopScores()
 	{
@@ -23,19 +31,27 @@ public class GameManager : MonoBehaviour
 		playersData = playersData.OrderByDescending(playerData => playerData.m_playerScore).ToArray();
 
 		playerText_1.text = playersData[0].m_text.text;
-		playerColor_1.color = playersData[0].m_rawImage.material.color;
+		Color pColor  = playersData[0].m_rawImage.material.color;
+		pColor.a = 1.0f;
+		playerColor_1.color = pColor;
+
+		m_floorMaterial.color = playerColor_1.color; 
 
 		if(playersData[1] != null)
 		{
 			playerText_2.text = playersData[1].m_text.text;
-			playerColor_2.color = playersData[1].m_rawImage.material.color;
+			pColor = playersData[1].m_rawImage.material.color;
+			pColor.a = 1.0f;
+			playerColor_2.color = pColor;
 		}
 
 		
 		if(playersData[2] != null)
 		{
 			playerText_3.text = playersData[2].m_text.text;
-			playerColor_3.color = playersData[2].m_rawImage.material.color;
+			pColor = playersData[2].m_rawImage.material.color;
+			pColor.a = 1.0f;
+			playerColor_3.color = pColor;
 		}
 
 	}
@@ -47,6 +63,12 @@ public class GameManager : MonoBehaviour
 		{
 			Application.LoadLevel(Application.loadedLevel);
 		}
+
+	}
+
+	IEnumerator PulseFloorColor()
+	{
+
 
 	}
 

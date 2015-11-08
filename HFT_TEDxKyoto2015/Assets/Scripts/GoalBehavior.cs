@@ -30,6 +30,8 @@ namespace HappyFunTimesExample
 
 		ScreenShakeManager m_screenShakeManager;
 
+		Light m_goalLight;
+		Material m_goalMaterial;
 
 		void Start() 
 		{
@@ -40,7 +42,8 @@ namespace HappyFunTimesExample
 			m_originalScale = transform.localScale;
 
 			m_screenShakeManager = FindObjectOfType<ScreenShakeManager>();
-
+			m_goalLight = GetComponentInChildren<Light>();
+			m_goalMaterial = GetComponent<MeshRenderer>().material;
 		}
 		
 		void OnTriggerEnter(Collider other) 
@@ -94,6 +97,10 @@ namespace HappyFunTimesExample
 			float step = m_scaleCurve.Evaluate(progress);
 
 			transform.localScale = Vector3.Lerp(m_minScale, m_originalScale, step);
+
+			// do color/light code
+			//Color randomColor = new Color( UnityEngine.Random.Range(0,1), UnityEngine.Random.Range(0,1), UnityEngine.Random.Range(0,1), 1 );
+			//m_goalMaterial.color = randomColor;
 
 		}
 
