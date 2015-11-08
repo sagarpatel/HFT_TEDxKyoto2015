@@ -36,7 +36,7 @@ namespace HappyFunTimesExample
 			m_rand = new System.Random();
 			m_position = new Vector3();
 			m_goalRigibody = GetComponent<Rigidbody>();
-			//StartCoroutine(ImpulseAwayFromPlayersCoroutine());
+			StartCoroutine(ImpulseAwayFromPlayersCoroutine());
 			m_originalScale = transform.localScale;
 
 			m_screenShakeManager = FindObjectOfType<ScreenShakeManager>();
