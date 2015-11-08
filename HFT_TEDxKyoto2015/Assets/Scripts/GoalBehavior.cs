@@ -28,6 +28,7 @@ namespace HappyFunTimesExample
 		float m_explosionRadius = 150.0f;
 		float m_explosionPower  = 7000.0f;
 
+		ScreenShakeManager m_screenShakeManager;
 
 
 		void Start() 
@@ -38,12 +39,15 @@ namespace HappyFunTimesExample
 			//StartCoroutine(ImpulseAwayFromPlayersCoroutine());
 			m_originalScale = transform.localScale;
 
+			m_screenShakeManager = FindObjectOfType<ScreenShakeManager>();
+
 		}
 		
 		void OnTriggerEnter(Collider other) 
 		{
 			if(other.CompareTag("Player"))
 			{
+				m_screenShakeManager.LaunchScreenShake();
 				ApplyExplosionForce();
 				PickPosition();
 			}
@@ -126,6 +130,9 @@ namespace HappyFunTimesExample
 			players = players.OrderBy(player => Vector3.Distance(player.transform.position, transform.position)).ToArray();
 			return players[0].transform.position;
 		}
-		
+
+
+
+
 	}
 }
