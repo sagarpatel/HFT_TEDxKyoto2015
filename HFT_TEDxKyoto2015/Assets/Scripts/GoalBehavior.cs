@@ -28,6 +28,8 @@ namespace HappyFunTimesExample
 		float m_explosionRadius = 150.0f;
 		float m_explosionPower  = 7000.0f;
 
+
+
 		void Start() 
 		{
 			m_rand = new System.Random();
@@ -35,13 +37,13 @@ namespace HappyFunTimesExample
 			m_goalRigibody = GetComponent<Rigidbody>();
 			//StartCoroutine(ImpulseAwayFromPlayersCoroutine());
 			m_originalScale = transform.localScale;
+
 		}
 		
 		void OnTriggerEnter(Collider other) 
 		{
 			if(other.CompareTag("Player"))
 			{
-
 				ApplyExplosionForce();
 				PickPosition();
 			}

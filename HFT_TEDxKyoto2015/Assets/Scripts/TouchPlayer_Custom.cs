@@ -13,19 +13,21 @@ namespace HappyFunTimesExample
 		private Renderer m_renderer;
 		private HFTGamepad m_gamepad;
 		private HFTInput m_hftInput;
-		private UnityEngine.UI.Text m_text;
-		private UnityEngine.UI.RawImage m_rawImage;
+		public UnityEngine.UI.Text m_text;
+		public UnityEngine.UI.RawImage m_rawImage;
 		private Vector3 m_position;
 		private Color m_color;
 		private string m_name;
 
-			int m_playerScore = 0;
+			public int m_playerScore = 0;
 			Rigidbody m_playerRigidbody;
 			float m_forceScale = 20000.0f;
 			Vector3 m_previousTouchPos = Vector3.zero;
 			public Transform m_impulseParticleEffectHolder;
 			ParticleSystem m_impulseParticles;
 			Light m_playerLight;
+
+		GameManager m_gameManager;
 
 		void Start()
 		{
@@ -47,6 +49,8 @@ namespace HappyFunTimesExample
 			m_impulseParticles.startColor = m_gamepad.Color;
 			m_playerLight = GetComponentInChildren<Light>();
 			m_playerLight.color = m_gamepad.Color;
+
+			m_gameManager = FindObjectOfType<GameManager>();
 		}
 		
 		void Update()
@@ -123,6 +127,7 @@ namespace HappyFunTimesExample
 				{
 					m_playerScore += 1;
 					RefreshPlayerNameTag();
+					m_gameManager.RefreshTopScores();
 				}
 		}
 		
