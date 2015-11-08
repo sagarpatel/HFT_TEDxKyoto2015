@@ -21,7 +21,7 @@ namespace HappyFunTimesExample
 
 			public int m_playerScore = 0;
 			Rigidbody m_playerRigidbody;
-			float m_forceScale = 20000.0f;
+			float m_forceScale = 100000.0f;
 			Vector3 m_previousTouchPos = Vector3.zero;
 			public Transform m_impulseParticleEffectHolder;
 			ParticleSystem m_impulseParticles;

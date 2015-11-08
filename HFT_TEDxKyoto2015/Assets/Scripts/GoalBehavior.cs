@@ -16,8 +16,8 @@ namespace HappyFunTimesExample
 		public System.Random m_rand;
 		public Vector3 m_position;
 
-		float m_fleeImpulseCooldown = 1.42f;
-		float m_fleeImpulseScale = 5000.0f;
+		float m_fleeImpulseCooldown = 1.24f;
+		float m_fleeImpulseScale = 7000.0f;
 		Rigidbody m_goalRigibody;
 		float m_fleeTimeCounter = 0;
 		public AnimationCurve m_scaleCurve;
@@ -26,7 +26,7 @@ namespace HappyFunTimesExample
 		Vector3 m_minScale = new Vector3(10,10,10);
 
 		float m_explosionRadius = 150.0f;
-		float m_explosionPower  = 7000.0f;
+		float m_explosionPower  = 8000.0f;
 
 		ScreenShakeManager m_screenShakeManager;
 
@@ -127,6 +127,11 @@ namespace HappyFunTimesExample
 		Vector3 GetClosestPlayerPosition()
 		{
 			GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+			if(players.Length == 0)
+				return Vector3.zero;
+
+
 			players = players.OrderBy(player => Vector3.Distance(player.transform.position, transform.position)).ToArray();
 			return players[0].transform.position;
 		}
